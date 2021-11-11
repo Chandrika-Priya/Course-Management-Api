@@ -73,8 +73,6 @@ public class CourseControllerIntegrationTest {
                 .content(this.mapper.writeValueAsString(course))
                 .contentType("application/json")
                 .accept("application/json");
-
-
         mockMvc.perform(mockRequest)
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", is(LocalDateTime.now().withNano(0).toString())));
@@ -91,7 +89,6 @@ public class CourseControllerIntegrationTest {
                 .content(this.mapper.writeValueAsString(course))
                 .contentType("application/json")
                 .accept("application/json");
-
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uploadedAt", is(LocalDateTime.now().withNano(0).toString())));
