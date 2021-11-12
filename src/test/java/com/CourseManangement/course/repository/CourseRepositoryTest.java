@@ -1,7 +1,5 @@
-package com.CourseManangement.course;
+package com.CourseManangement.course.repository;
 
-import com.CourseManangement.course.repository.Course;
-import com.CourseManangement.course.repository.CourseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

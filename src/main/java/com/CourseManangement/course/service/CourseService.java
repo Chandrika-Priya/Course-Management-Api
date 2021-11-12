@@ -1,4 +1,4 @@
-package com.CourseManangement.course;
+package com.CourseManangement.course.service;
 
 import com.CourseManangement.course.repository.Course;
 import com.CourseManangement.course.repository.CourseRepository;
@@ -19,14 +19,12 @@ public class CourseService {
     }
 
     public Course getCourseById(Integer id) {
-            Course course = courseRepository.findById(id);
-            return course;
+        return courseRepository.findById(id);
     }
 
     public Course addCourse(Course course) {
         Course newCourse = new Course(course.getName(), course.getDescription());
-        courseRepository.save(newCourse);
-        return newCourse;
+        return courseRepository.save(newCourse);
     }
 
     public Course updateCourse(Course course, Integer id) {
@@ -34,22 +32,16 @@ public class CourseService {
         updatedCourse.setName(course.getName());
         updatedCourse.setDescription(course.getDescription());
         updatedCourse.setUploadedAt(LocalDateTime.now().withNano(0).toString());
-
         courseRepository.save(updatedCourse);
-
         return updatedCourse;
     }
 
     public void deleteCourse(Integer id) {
-        Course deletedCourse = courseRepository.findById(id);
-        courseRepository.delete(deletedCourse);
+        courseRepository.delete(courseRepository.findById(1));
     }
 
     public boolean getCourseByTitle(String name) {
-        Course course= courseRepository.findByName(name);
-        if(course == null) {
-            return false;
-        }
-        return true;
+        Course course = courseRepository.findByName(name);
+        return course != null;
     }
 }

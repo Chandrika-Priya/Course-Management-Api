@@ -1,6 +1,6 @@
-package com.CourseManangement.course.view;
+package com.CourseManangement.course.controller;
 
-import com.CourseManangement.course.CourseService;
+import com.CourseManangement.course.service.CourseService;
 import com.CourseManangement.course.repository.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

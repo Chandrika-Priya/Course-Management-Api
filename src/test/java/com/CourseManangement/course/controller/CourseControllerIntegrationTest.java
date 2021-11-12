@@ -1,7 +1,7 @@
-package com.CourseManangement.course;
+package com.CourseManangement.course.controller;
 
 import com.CourseManangement.course.repository.Course;
-import com.CourseManangement.course.view.CourseController;
+import com.CourseManangement.course.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +21,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,7 +66,17 @@ public class CourseControllerIntegrationTest {
     }
 
     @Test
-    void shouldCreateCourse() throws Exception {
+    void shouldGiveErrorWhenIdNotFound() throws Exception {
+        when(courseService.getCourseById(anyInt())).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/courses/1")
+                        .contentType("application/json"))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error", is("Course id = 1 not found")));
+    }
+
+    @Test
+    void shouldAddCourse() throws Exception {
         Course course = new Course("React", "React description");
         when(courseService.addCourse(Mockito.any())).thenReturn(course);
 
@@ -76,6 +87,35 @@ public class CourseControllerIntegrationTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", is(LocalDateTime.now().withNano(0).toString())));
+    }
+
+    @Test
+    void shouldGiveErrorWhenCourseTitleIsNotGiven() throws Exception {
+        Course course = new Course(null, "React description");
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/courses")
+                .content(this.mapper.writeValueAsString(course))
+                .contentType("application/json")
+                .accept("application/json");
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error", is("Course title is required")));
+
+    }
+
+    @Test
+    void shouldGiveErrorWhenCourseWithSameCourseTitleIsGiven() throws Exception {
+        Course course = new Course("React", "React description");
+        when(courseService.getCourseByTitle(anyString())).thenReturn(true);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/courses")
+                .content(this.mapper.writeValueAsString(course))
+                .contentType("application/json")
+                .accept("application/json");
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error", is("Course with title 'React' already exists")));
+
     }
 
     @Test
