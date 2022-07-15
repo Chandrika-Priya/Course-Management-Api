@@ -2,16 +2,15 @@ pipeline{
     agent any
 
     stages{
-//     stage('init'){
-//             steps{
-//             script{
-//                 gv = load 'script.groovy'
-//                 }
-//                 }
-//         }
+    stage('init'){
+            steps{
+            script{
+                gv = load 'script.groovy'
+                }
+                }
+        }
     stage('Build'){
         steps {
-            //git 'https://github.com/Chandrika-Priya/Course-Management-Api.git'
             sh './gradlew clean build'
             }
         }
@@ -21,12 +20,12 @@ pipeline{
             sh './gradlew test'
             }
         }
-//     stage('Deploy'){
-//             steps {
-//             script{
-//                 gv.buildApp()
-//                 }
-//                 }
-//             }
+    stage('Deploy'){
+            steps {
+            script{
+                gv.buildApp()
+                }
+                }
+            }
     }
 }
